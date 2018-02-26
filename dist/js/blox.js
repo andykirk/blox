@@ -24,9 +24,33 @@
 
     window.BLOX = {
         settings: {
-            default_type: 'html'
+            default_type: 'html',
+            containers: {
+                'one-up': {
+                    name: 'One-up',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="38" viewBox="0 0 62 38"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" fill="#ffffff" width="60" height="36" /></svg>',
+                    template: '<div data-blox-container><div data-blox-panel></div></div>'
+                },
+                'two-up': {
+                    name: 'Two-up',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="38" viewBox="0 0 62 38"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" fill="#ffffff" width="60" height="36" /><line x1="31" y1="1" x2="31" y2="37"/></svg>'
+                },
+                'three-up': {
+                    name: 'Three-up',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="38" viewBox="0 0 62 38"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" fill="#ffffff" width="60" height="36" /><line x1="21" y1="1" x2="21" y2="37"/><line x1="41" y1="1" x2="41" y2="37"/></svg>'
+                },
+                'float-left': {
+                    name: 'Float left',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="38" viewBox="0 0 62 38"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" fill="#ffffff" width="60" height="36" /><rect x="5" y="6" width="26" height="15"/><line x1="35" y1="6" x2="57" y2="6"/><line x1="35" y1="11" x2="57" y2="11"/><line x1="35" y1="16" x2="57" y2="16"/><line x1="35" y1="21" x2="57" y2="21"/><line x1="5" y1="26" x2="57" y2="26"/><line x1="5" y1="31" x2="57" y2="31"/></svg>'
+                },
+                'float-right': {
+                    name: 'Float right',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="38" viewBox="0 0 62 38"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" fill="#ffffff" width="60" height="36" /><rect x="31" y="5" width="26" height="16"/><line x1="5" y1="6" x2="27" y2="6"/><line x1="5" y1="11" x2="27" y2="11"/><line x1="5" y1="16" x2="27" y2="16"/><line x1="5" y1="21" x2="27" y2="21"/><line x1="5" y1="26" x2="57" y2="26"/><line x1="5" y1="31" x2="57" y2="31"/></svg>'
+                }
+            }
         },
         instances: [],
+        editors: {},
         helpers: {}
     };
 
@@ -37,29 +61,17 @@
 */
 
 BLOX.containers = {
-    options: [
-        {
-            name: 'One-up',
-            icon: ''
-        },
-        {
-            name: 'Two-up',
-            icon: ''
-        },
-        {
-            name: 'Three-up',
-            icon: ''
-        },
-        {
-            name: 'Float left',
-            icon: ''
-        },
-        {
-            name: 'Float right',
-            icon: ''
-        }
-    ],
-    add: function () {},
+    add: function (type, ref_el) {
+        console.log(type);
+        
+        // Tmp. force type as the others aren't set up yet.
+        type = 'one-up';
+        
+        var container_dfn = BLOX.settings.containers[type];
+        
+        ref_el.insertAdjacentHTML('afterend', container_dfn.template);
+        BLOX.controls.add_container_options(ref_el.nextElementSibling);
+    },
     remove: function () {}
 };
 /*
@@ -67,19 +79,56 @@ BLOX.containers = {
 */
 
 BLOX.controls = {
-    add: function (target) {
+    add_container_options: function (target) {
         //console.log('Adding controls', target);
-        var container_options = '';
-        BLOX.containers.options.forEach(function(item, i){
-            container_options += '<button>' + item.name + '</button>';
-        });
+
+        target.insertAdjacentHTML('afterend', '<div data-blox-controls><button aria-expanded="false">' + BLOX.icons.plus + ' </button><div data-blox-container-options hidden></div></div>');
+        var toggle   = target.nextElementSibling.querySelector('[data-blox-controls] > button');
+        var controls = toggle.nextElementSibling;
         
-        target.insertAdjacentHTML('afterend', '<div data-blox-controls><button>' + BLOX.icons.plus + ' </button><div>' + container_options + '</div></div>');
-        var control = target.nextElementSibling.querySelector('[data-blox-controls] > button');
+        for (var type in BLOX.settings.containers) {
+            var item = BLOX.settings.containers[type];
+            var btn  = document.createElement('button');
+            btn.innerHTML = item.icon;
+            btn.setAttribute('data-blox-type', type);
+            btn.addEventListener('click', function(e){
+                //console.log(e);
+                //console.log(this);
+                e.preventDefault();
+                
+                BLOX.containers.add(this.getAttribute('data-blox-type'), target.nextElementSibling);
+                toggle.click();
+            });
+            controls.appendChild(btn);
+        };
+        
         //console.log(control);
-        control.addEventListener('click', function(e){
-            console.log(e);
+        toggle.addEventListener('click', function(e){
+            //console.log(e);
             e.preventDefault();
+            
+            var expanded = toggle.getAttribute('aria-expanded') === 'true' || false;
+            toggle.setAttribute('aria-expanded', !expanded)
+            controls.hidden = expanded;
+        });
+    },
+    add_panel_actions: function (target) {
+        console.log(target);
+        var blox_type = target.getAttribute('data-blox-type');
+        var actions = '<button data-blox-action="done" data-blox-action-for="' + blox_type + '">Done</button>';
+        
+        target.insertAdjacentHTML('beforeend', actions);
+        //var actions_html = BLOX.helpers.parseHTML(actions);
+
+        //target.appendChild(actions_html); return;
+        var done_action = target.querySelector('[data-blox-action="done"]');
+        
+        
+        done_action.addEventListener('click', function(e){
+            e.preventDefault();
+
+            blox_type_editor = BLOX.editors[this.getAttribute('data-blox-action-for')];
+            blox_type_editor.action_done(this);
         });
     },
     remove: function () {}
@@ -179,8 +228,50 @@ BLOX.replace = function (selector) {
         //console.log(blox_containers);
         
         Array.prototype.forEach.call(blox_containers, function(bc, i){
-            BLOX.controls.add(bc);
+            BLOX.controls.add_container_options(bc);
+
+            var blox_panels = blox_area.querySelectorAll('[data-blox-panel]');;
+            Array.prototype.forEach.call(blox_panels, function(bp, j){
+                var blox_type = bp.getAttribute('data-blox-type');
+                console.log(blox_type);
+                // Adapt the content for the editor:
+                var blox_type_editor = BLOX.editors[blox_type];
+                blox_type_editor.adapt(bp);
+                
+                BLOX.controls.add_panel_actions(bp);
+            });
         });
         
     });
+};
+/*
+
+*/
+
+BLOX.editors['html'] = {
+    adapt: function(el){
+        // Check for CKEditor:
+        if (typeof CKEDITOR === 'undefined') {
+            console.error('CKEDITOR does not exist.');
+        }
+
+        var html = '<textarea id="flibble">' + el.innerHTML + '</textarea>';
+        el.innerHTML = html;
+        var textarea = el.querySelector('textarea');
+        //console.log(textarea);
+        CKEDITOR.replace(textarea);
+    },
+
+    action_done: function(el){
+        //console.log('Done action');
+        //console.log(CKEDITOR);
+        // Get the instance name:
+        //console.log(el);
+        var instance_name = el.previousElementSibling.getAttribute('id').replace('cke_', '');
+        var instance = CKEDITOR.instances[instance_name];
+        console.log(instance);
+        instance.updateElement();
+
+        console.log( document.getElementById( 'flibble' ).value ); // The current editor data.
+    }
 };

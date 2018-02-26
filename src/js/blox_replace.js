@@ -76,7 +76,18 @@ BLOX.replace = function (selector) {
         //console.log(blox_containers);
         
         Array.prototype.forEach.call(blox_containers, function(bc, i){
-            BLOX.controls.add(bc);
+            BLOX.controls.add_container_options(bc);
+
+            var blox_panels = blox_area.querySelectorAll('[data-blox-panel]');;
+            Array.prototype.forEach.call(blox_panels, function(bp, j){
+                var blox_type = bp.getAttribute('data-blox-type');
+                console.log(blox_type);
+                // Adapt the content for the editor:
+                var blox_type_editor = BLOX.editors[blox_type];
+                blox_type_editor.adapt(bp);
+                
+                BLOX.controls.add_panel_actions(bp);
+            });
         });
         
     });
