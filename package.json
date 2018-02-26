@@ -1,8 +1,8 @@
 {
-  "name": "NPEU-Mockup",
+  "name": "Blox-Dev",
   "version": "1.0.0",
-  "description": "This file lists all the Node packages required for the project's build tools.",
-  "repository": "https://github.com/NPEU/mockups",
+  "description": "Build tasks for Blox development.",
+  "repository": "https://github.com/andykirk/blox",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
