@@ -25,6 +25,7 @@
     window.BLOX = {
         settings: {
             default_type: 'html',
+            default_editor: 'ckeditor',
             containers: {
                 'one-up': {
                     name: 'One-up',

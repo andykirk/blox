@@ -14,7 +14,7 @@ BLOX.replace = function (selector) {
             return;
         }
         // Hide the textarea:
-        el.style.display = 'none';
+        //el.style.display = 'none';
         
         // Get the textarea contents:
         var content = el.value;
@@ -56,7 +56,7 @@ BLOX.replace = function (selector) {
             // Not sure how to handle this case. If the content was just HTML and it will be fine to
             // wrap it and use it a single block, but if it's mangled BLOX code, we may need to 
             // rescue it somehow? Assuming mangled BLOX code is quite unlikely so just wrap.
-            var blox_html = BLOX.helpers.parseHTML('<div data-blox-container><div data-blox-panel data-blox-type="' + BLOX.settings.default_type + '">' + content + '</div></div>');
+            var blox_html = BLOX.helpers.parseHTML('<div data-blox-container><div data-blox-panel data-blox-type="' + BLOX.settings.default_editor + '">' + content + '</div></div>');
         }        
         
         // Append a blox-area:

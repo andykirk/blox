@@ -3,6 +3,7 @@
 */
 
 BLOX.controls = {
+    
     add_container_options: function (target) {
         //console.log('Adding controls', target);
 
@@ -36,6 +37,7 @@ BLOX.controls = {
             controls.hidden = expanded;
         });
     },
+    
     add_panel_actions: function (target) {
         console.log(target);
         var blox_type = target.getAttribute('data-blox-type');

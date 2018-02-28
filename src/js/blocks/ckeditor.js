@@ -2,7 +2,8 @@
 
 */
 
-BLOX.editors['html'] = {
+BLOX.editors['ckeditor'] = {
+    type: 'html',
     adapt: function(el){
         // Check for CKEditor:
         if (typeof CKEDITOR === 'undefined') {
