@@ -31,7 +31,7 @@ The advantage of this approach is that you can configure the sorts of containers
 
 Containers are always full-width and contain a number of panels. There's a 100 wide panel, and then there's a 50/50 one, and 33/33/33 etc. The plan, ultimately, is to allow panels to be merged (and unmerged) to allow for things like 33/66 splits.
 
-There are also two special panels that don't like inside containers that float left or right and you can set the default width of those.
+There are also two special panels that don't live inside containers that float left or right and you can set the default width of those.
 
 This is just a layout tool, but it's not built into any WYSIWYG - that's the beauty of it.
 
@@ -48,5 +48,5 @@ Output
 
 So this editor doesn't take much responsibility for how your content looks when loaded into one of your pages. I'll be providing simple, clean stylesheet you can use a starting point or as guidance, but you can style anything how you like.
 
-For example, take a panel with 4 panels. In order to be responsive, and some breakpoint that should drop to a single column, but that breakpoint should be yours to choose, based on a whole range of considerations.
+For example, take a container with 4 panels. In order to be responsive, at some breakpoint they should drop to a single column, but that breakpoint should be yours to choose, based on a whole range of considerations.
 Also, you may decide it's appropriate for there to be an interim stage of 2x2 panels. Again, that's up to you.
